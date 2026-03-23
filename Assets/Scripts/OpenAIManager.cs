@@ -18,14 +18,15 @@ public class OpenAIManager : MonoBehaviour
     {
         string url = "https://api.openai.com/v1/chat/completions";
 
-        string prompt =
-        "Create 1 MCQ question in this format:\n" +
-        "Question: ...\nA: ...\nB: ...\nC: ...\nD: ...\nAnswer: ...\n\n" +
-        "From this:\n" + notes;
+       string prompt =
+"Create 5 MCQ questions EXACTLY in this format:\n\n" +
+"Question: ...\nA: ...\nB: ...\nC: ...\nD: ...\nAnswer: ...\n\n" +
+"(Repeat for all 5 questions)\n\n" +
+"From this:\n" + notes;
 
         string json =
-        "{ \"model\": \"gpt-4.1-mini\", " +
-        "\"messages\": [{\"role\":\"user\",\"content\":\"" + prompt + "\"}] }";
+"{ \"model\": \"gpt-4.1-mini\", " +
+"\"messages\": [{\"role\":\"user\",\"content\":\"" + prompt + "\"}] }";
 
         UnityWebRequest req = new UnityWebRequest(url, "POST");
 
@@ -41,7 +42,7 @@ public class OpenAIManager : MonoBehaviour
         if (req.result == UnityWebRequest.Result.Success)
         {
             string response = req.downloadHandler.text;
-            questionManager.ParseAndDisplay(response);
+            questionManager.ParseMultiple(response);
         }
         else
         {

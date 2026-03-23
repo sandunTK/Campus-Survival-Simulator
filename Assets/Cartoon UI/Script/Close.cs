@@ -2,14 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CartoonUI
+public class Close : MonoBehaviour
 {
-    public class Close : MonoBehaviour
+    public GameObject panelToClose;
+
+    public void ClosePanel()
     {
-        public GameObject gameObject;
-        public void close()
-        {
-            gameObject.SetActive(false);
-        }
+        panelToClose.SetActive(false);
     }
 }
