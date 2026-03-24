@@ -12,4 +12,9 @@ public class MainMenuUI : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void Settings()
+    {
+        SceneManager.LoadScene("Settings");
+    }
 }
