@@ -2,10 +2,18 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Text;
+using System;
 
 public class GeminiManager : MonoBehaviour
 {
-    private string apiKey = "AIzaSyBLKFBBdpQuQUQDRW7vU5KXJfrrJKryojE";
+    [Header("API Settings")]
+    [SerializeField] private string apiKey = "AIzaSyBp4OD5Ia1NBsDH345OXq6w10kqGfKQPLw"; // ⚠️ Replace with a new key!
+    
+    // ✅ TRY THESE STRINGS IF ONE 404s: 
+    // 1. "gemini-1.5-flash-latest"
+    // 2. "gemini-2.0-flash-exp" (Latest 2.0 version)
+    // 3. "gemini-1.5-flash-002" (Specific versioned name)
+    [SerializeField] private string modelName = "gemini-1.5-flash-latest"; 
 
     public QuestionManager questionManager;
 
@@ -16,102 +24,64 @@ public class GeminiManager : MonoBehaviour
 
     IEnumerator RequestGemini(string notes)
     {
-        if (string.IsNullOrEmpty(notes))
+        if (string.IsNullOrEmpty(notes)) yield break;
+
+        // ✅ Using v1beta with the "models/" prefix explicitly
+        string url = $"https://generativelanguage.googleapis.com/v1beta/models/{modelName}:generateContent?key={apiKey}";
+
+        string promptText = "Create 5 MCQ questions in this format:\n\n" +
+                            "Question: ...\nA: ...\nB: ...\nC: ...\nD: ...\nAnswer: ...\n\n" +
+                            "From this text: " + notes;
+
+        GeminiRequest requestData = new GeminiRequest {
+            contents = new Content[] { new Content { parts = new Part[] { new Part { text = promptText } } } }
+        };
+
+        string jsonPayload = JsonUtility.ToJson(requestData);
+
+        using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
         {
-            Debug.LogError("Notes empty!");
-            yield break;
-        }
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPayload);
+            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
 
-        string url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest?key=" + apiKey;
+            yield return request.SendWebRequest();
 
-        string safeNotes = notes.Replace("\"", "\\\"");
-
-        string prompt =
-            "Create 5 MCQ questions EXACTLY in this format:\n\n" +
-            "Question: ...\nA: ...\nB: ...\nC: ...\nD: ...\nAnswer: ...\n\n" +
-            "From this:\n" + safeNotes;
-
-        string json =
-            "{ \"contents\": [{ \"parts\": [{ \"text\": \"" + prompt + "\" }] }] }";
-             // ✅ Declare request early
-    UnityWebRequest request = new UnityWebRequest(url, "POST");
-    request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
-    request.downloadHandler = new DownloadHandlerBuffer();
-    request.SetRequestHeader("Content-Type", "application/json");
-
-    // Send the request
-    yield return request.SendWebRequest();
-
-    // Check for success
-    if (request.result == UnityWebRequest.Result.Success)
-    {
-        string response = request.downloadHandler.text;
-        Debug.Log("Raw response: " + response);
-
-        // Extract text safely
-        string extractedText = ExtractText(response);
-        Debug.Log("Extracted Text: " + extractedText);
-
-        // Send to your QuestionManager
-        questionManager.ParseMultiple(extractedText);
-    }
-    else
-    {
-        Debug.LogError($"Request failed: {request.result} - {request.error}\nResponse: {request.downloadHandler.text}");
-    }
-
-    // Local function to extract text from Gemini response
-    string ExtractText(string json)
-    {
-        try
-        {
-            var data = JsonUtility.FromJson<GeminiResponse>(json);
-
-            if (data.candidates == null || data.candidates.Length == 0)
+            if (request.result == UnityWebRequest.Result.Success)
             {
-                Debug.LogError("No candidates found in response");
-                return "";
+                Debug.Log("Gemini Success!");
+                HandleResponse(request.downloadHandler.text);
             }
-
-            var firstCandidate = data.candidates[0];
-            if (firstCandidate.content?.parts == null || firstCandidate.content.parts.Length == 0)
+            else
             {
-                Debug.LogError("No parts found in candidate content");
-                return "";
+                Debug.LogError($"<color=red><b>GEMINI ERROR {request.responseCode}</b></color>");
+                Debug.LogError("Server Response: " + request.downloadHandler.text);
+                
+                // 💡 AUTO-HINT for 404
+                if (request.responseCode == 404) {
+                    Debug.LogWarning("404 FIX: Try changing modelName to 'gemini-1.5-flash-latest' or 'gemini-2.0-flash' in the Inspector.");
+                }
             }
-
-            return firstCandidate.content.parts[0].text;
         }
-        catch
-        {
-            Debug.LogError("Failed to parse Gemini response: " + json);
-            return "";
-    }
-}
     }
 
-    // ✅ Move these classes OUTSIDE the method but inside the MonoBehaviour
-    [System.Serializable]
-    public class GeminiResponse
+    private void HandleResponse(string json)
     {
-        public Candidate[] candidates;
+        try {
+            var response = JsonUtility.FromJson<GeminiResponse>(json);
+            if (response?.candidates != null && response.candidates.Length > 0) {
+                string text = response.candidates[0].content.parts[0].text;
+                questionManager.ParseMultiple(text);
+            }
+        } catch (Exception e) {
+            Debug.LogError("Parse Error: " + e.Message);
+        }
     }
 
-    [System.Serializable]
-    public class Candidate
-    {
-        public Content content;
-    }
-
-    [System.Serializable]
-    public class Content
-    {
-        public Part[] parts;
-    }
-
-    [System.Serializable]
-    public class Part
-    {
-        public string text;
-    }
+    [Serializable] public class GeminiRequest { public Content[] contents; }
+    [Serializable] public class GeminiResponse { public Candidate[] candidates; }
+    [Serializable] public class Candidate { public Content content; }
+    [Serializable] public class Content { public Part[] parts; }
+    [Serializable] public class Part { public string text; }
 }
