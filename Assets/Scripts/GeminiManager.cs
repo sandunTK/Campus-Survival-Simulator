@@ -33,53 +33,59 @@ public class GeminiManager : MonoBehaviour
 
         string json =
             "{ \"contents\": [{ \"parts\": [{ \"text\": \"" + prompt + "\" }] }] }";
+             // ✅ Declare request early
+    UnityWebRequest request = new UnityWebRequest(url, "POST");
+    request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
+    request.downloadHandler = new DownloadHandlerBuffer();
+    request.SetRequestHeader("Content-Type", "application/json");
 
-        UnityWebRequest request = new UnityWebRequest(url, "POST");
-        byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
-        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-        request.downloadHandler = new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type", "application/json");
+    // Send the request
+    yield return request.SendWebRequest();
 
-        yield return request.SendWebRequest();
-
-        if (request.result == UnityWebRequest.Result.Success)
-        {
-            string response = request.downloadHandler.text;
-            Debug.Log(response);
-            string extractedText = ExtractText(response);
-            questionManager.ParseMultiple(extractedText);
-        }
-        else
-        {
-            Debug.LogError($"Request failed: {request.result} - {request.error}\nResponse: {request.downloadHandler.text}");
-        }
-
-        // ✅ Local function for extracting text (no access modifier needed)
-        string ExtractText(string json)
-{
-    try
+    // Check for success
+    if (request.result == UnityWebRequest.Result.Success)
     {
-        var data = JsonUtility.FromJson<GeminiResponse>(json);
+        string response = request.downloadHandler.text;
+        Debug.Log("Raw response: " + response);
 
-        if (data.candidates == null || data.candidates.Length == 0)
-        {
-            Debug.LogError("No candidates found in response");
-            return "";
-        }
+        // Extract text safely
+        string extractedText = ExtractText(response);
+        Debug.Log("Extracted Text: " + extractedText);
 
-        var firstCandidate = data.candidates[0];
-        if (firstCandidate.content?.parts == null || firstCandidate.content.parts.Length == 0)
-        {
-            Debug.LogError("No parts found in candidate content");
-            return "";
-        }
-
-        return firstCandidate.content.parts[0].text;
+        // Send to your QuestionManager
+        questionManager.ParseMultiple(extractedText);
     }
-    catch
+    else
     {
-        Debug.LogError("Failed to parse Gemini response: " + json);
-        return "";
+        Debug.LogError($"Request failed: {request.result} - {request.error}\nResponse: {request.downloadHandler.text}");
+    }
+
+    // Local function to extract text from Gemini response
+    string ExtractText(string json)
+    {
+        try
+        {
+            var data = JsonUtility.FromJson<GeminiResponse>(json);
+
+            if (data.candidates == null || data.candidates.Length == 0)
+            {
+                Debug.LogError("No candidates found in response");
+                return "";
+            }
+
+            var firstCandidate = data.candidates[0];
+            if (firstCandidate.content?.parts == null || firstCandidate.content.parts.Length == 0)
+            {
+                Debug.LogError("No parts found in candidate content");
+                return "";
+            }
+
+            return firstCandidate.content.parts[0].text;
+        }
+        catch
+        {
+            Debug.LogError("Failed to parse Gemini response: " + json);
+            return "";
     }
 }
     }
