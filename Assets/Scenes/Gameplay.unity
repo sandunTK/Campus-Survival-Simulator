@@ -2906,8 +2906,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70e503a99a7abb548832ab39e75c9838, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GeminiManager
-  apiKey: AIzaSyDDBS7pWg-0WjMJ8LqkJATvo9slxPJnvLM
-  modelName: gemini-1.5-flash
+  apiKey: AIzaSyBk0eJuypzU80IAbLQWzF59ve1ZaHZoZzA
+  modelName: gemini-2.5-flash
   questionManager: {fileID: 1207905002}
 --- !u!114 &1207905001
 MonoBehaviour:
@@ -3536,7 +3536,6 @@ GameObject:
   - component: {fileID: 1407166572}
   - component: {fileID: 1407166574}
   - component: {fileID: 1407166573}
-  - component: {fileID: 1407166575}
   m_Layer: 5
   m_Name: QuestionsUI
   m_TagString: Untagged
@@ -3553,14 +3552,14 @@ RectTransform:
   m_GameObject: {fileID: 1407166571}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 6.430419, y: 4.853146, z: 4.853146}
+  m_LocalScale: {x: 1.7494501, y: 1.6586841, z: 2.7080557}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 268160761}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 56, y: 402}
+  m_AnchoredPosition: {x: -15, y: 679}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1407166573
@@ -3613,7 +3612,7 @@ MonoBehaviour:
   m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -3662,25 +3661,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1407166571}
   m_CullTransparentMesh: 1
---- !u!114 &1407166575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1407166571}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ee6facecfa13724ab2468bc7e383dde, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::QuestionManager
-  questionText: {fileID: 1407166573}
-  txtA: {fileID: 233243190}
-  txtB: {fileID: 840619765}
-  txtC: {fileID: 594545399}
-  txtD: {fileID: 1172899012}
-  feedbackText: {fileID: 1536726551}
-  stats: {fileID: 0}
 --- !u!1 &1436464946
 GameObject:
   m_ObjectHideFlags: 0

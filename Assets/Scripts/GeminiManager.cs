@@ -6,32 +6,32 @@ using System;
 
 public class GeminiManager : MonoBehaviour
 {
-    [Header("API Settings")]
-    [SerializeField] private string apiKey = "AIzaSyBp4OD5Ia1NBsDH345OXq6w10kqGfKQPLw"; // ⚠️ Replace with a new key!
+    [Header("API Configuration")]
+    [SerializeField] private string apiKey = "AIzaSyBk0eJuypzU80IAbLQWzF59ve1ZaHZoZzA"; 
     
-    // ✅ TRY THESE STRINGS IF ONE 404s: 
-    // 1. "gemini-1.5-flash-latest"
-    // 2. "gemini-2.0-flash-exp" (Latest 2.0 version)
-    // 3. "gemini-1.5-flash-002" (Specific versioned name)
-    [SerializeField] private string modelName = "gemini-1.5-flash-latest"; 
+    // ✅ CHANGED: 1.5-flash is retired. Using 2.5-flash for 2026 stability.
+    [SerializeField] private string modelName = "gemini-2.5-flash"; 
 
     public QuestionManager questionManager;
 
     public void GenerateFromNotes(string notes)
     {
+        if (string.IsNullOrEmpty(apiKey))
+        {
+            Debug.LogError("GeminiManager: NO API KEY! Paste your new key in the Inspector.");
+            return;
+        }
         StartCoroutine(RequestGemini(notes));
     }
 
-    IEnumerator RequestGemini(string notes)
+    private IEnumerator RequestGemini(string notes)
     {
-        if (string.IsNullOrEmpty(notes)) yield break;
-
-        // ✅ Using v1beta with the "models/" prefix explicitly
+        // ✅ URL: Using v1beta as it supports the newest 2.5 and 3.1 models
         string url = $"https://generativelanguage.googleapis.com/v1beta/models/{modelName}:generateContent?key={apiKey}";
 
-        string promptText = "Create 5 MCQ questions in this format:\n\n" +
-                            "Question: ...\nA: ...\nB: ...\nC: ...\nD: ...\nAnswer: ...\n\n" +
-                            "From this text: " + notes;
+        string promptText = "Create 5 MCQ questions in this format:\n" +
+                            "Question: ...\nA: ...\nB: ...\nC: ...\nD: ...\nAnswer: ...\n" +
+                            "From: " + notes;
 
         GeminiRequest requestData = new GeminiRequest {
             contents = new Content[] { new Content { parts = new Part[] { new Part { text = promptText } } } }
@@ -50,18 +50,13 @@ public class GeminiManager : MonoBehaviour
 
             if (request.result == UnityWebRequest.Result.Success)
             {
-                Debug.Log("Gemini Success!");
+                Debug.Log("<color=green>Gemini Success!</color>");
                 HandleResponse(request.downloadHandler.text);
             }
             else
             {
-                Debug.LogError($"<color=red><b>GEMINI ERROR {request.responseCode}</b></color>");
-                Debug.LogError("Server Response: " + request.downloadHandler.text);
-                
-                // 💡 AUTO-HINT for 404
-                if (request.responseCode == 404) {
-                    Debug.LogWarning("404 FIX: Try changing modelName to 'gemini-1.5-flash-latest' or 'gemini-2.0-flash' in the Inspector.");
-                }
+                // This will show exactly why it failed (404, 400, etc.)
+                Debug.LogError($"API ERROR {request.responseCode}: {request.downloadHandler.text}");
             }
         }
     }
@@ -71,12 +66,9 @@ public class GeminiManager : MonoBehaviour
         try {
             var response = JsonUtility.FromJson<GeminiResponse>(json);
             if (response?.candidates != null && response.candidates.Length > 0) {
-                string text = response.candidates[0].content.parts[0].text;
-                questionManager.ParseMultiple(text);
+                questionManager.ParseMultiple(response.candidates[0].content.parts[0].text);
             }
-        } catch (Exception e) {
-            Debug.LogError("Parse Error: " + e.Message);
-        }
+        } catch (Exception e) { Debug.LogError("Parse Error: " + e.Message); }
     }
 
     [Serializable] public class GeminiRequest { public Content[] contents; }
