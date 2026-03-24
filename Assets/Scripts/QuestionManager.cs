@@ -58,6 +58,25 @@ public class QuestionManager : MonoBehaviour
         currentIndex = 0;
         ShowQuestion();
     }
+    public void AnswerA()
+{
+    Answer("A");
+}
+
+public void AnswerB()
+{
+    Answer("B");
+}
+
+public void AnswerC()
+{
+    Answer("C");
+}
+
+public void AnswerD()
+{
+    Answer("D");
+}
 
     // 🔥 Show current question
     public void ShowQuestion()
@@ -102,4 +121,7 @@ public class QuestionManager : MonoBehaviour
         currentIndex++;
         ShowQuestion();
     }
+
+
+
 }

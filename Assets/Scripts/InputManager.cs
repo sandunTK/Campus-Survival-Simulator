@@ -4,11 +4,18 @@ using TMPro;
 public class InputManager : MonoBehaviour
 {
     public TMP_InputField inputField;
-    public OpenAIManager aiManager;
+    public GeminiManager aiManager; // ✅ FIXED
 
-    public void SendNotes()
+    public void OnClickGenerate()
     {
         string notes = inputField.text;
-        aiManager.GenerateFromNotes(notes); // ✅ FIXED
+
+        if (string.IsNullOrEmpty(notes))
+        {
+            Debug.LogError("Input is empty!");
+            return;
+        }
+
+        aiManager.GenerateFromNotes(notes);
     }
 }
