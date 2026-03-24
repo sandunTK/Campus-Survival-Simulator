@@ -3700,12 +3700,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestionManager
   questionText: {fileID: 1407166573}
-  txtA: {fileID: 0}
-  txtB: {fileID: 0}
-  txtC: {fileID: 0}
-  txtD: {fileID: 0}
-  feedbackText: {fileID: 0}
-  stats: {fileID: 0}
+  txtA: {fileID: 233243190}
+  txtB: {fileID: 840619765}
+  txtC: {fileID: 594545399}
+  txtD: {fileID: 1172899012}
+  feedbackText: {fileID: 1536726551}
+  stats: {fileID: 186221008}
 --- !u!1 &1436464946
 GameObject:
   m_ObjectHideFlags: 0
