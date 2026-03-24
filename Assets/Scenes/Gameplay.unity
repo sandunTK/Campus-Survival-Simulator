@@ -2964,6 +2964,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1207904999}
   - component: {fileID: 1207905000}
+  - component: {fileID: 1207905001}
   m_Layer: 0
   m_Name: 'GameManager '
   m_TagString: Untagged
@@ -3005,6 +3006,19 @@ MonoBehaviour:
   txtD: {fileID: 0}
   feedbackText: {fileID: 0}
   stats: {fileID: 0}
+--- !u!114 &1207905001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207904998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70e503a99a7abb548832ab39e75c9838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GeminiManager
+  questionManager: {fileID: 1895950819}
 --- !u!1 &1226077345
 GameObject:
   m_ObjectHideFlags: 0
