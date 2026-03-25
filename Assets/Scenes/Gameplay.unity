@@ -510,7 +510,7 @@ RectTransform:
   m_GameObject: {fileID: 268160760}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5843495, y: 0.7125, z: 1}
+  m_LocalScale: {x: 0.63907564, y: 0.7012031, z: 1.0936531}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1407166572}
@@ -525,7 +525,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 402, y: -134}
+  m_AnchoredPosition: {x: 420, y: -160}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &268160762
@@ -2889,7 +2889,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1259.232, y: 915.60645, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.57575, y: 0.57575, z: 0.57575}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -2906,7 +2906,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70e503a99a7abb548832ab39e75c9838, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GeminiManager
-  apiKey: AIzaSyBk0eJuypzU80IAbLQWzF59ve1ZaHZoZzA
+  apiKey: AIzaSyD8eleW-RzuktUHRBHmHPcodTICctqFlwE
   modelName: gemini-2.5-flash
   questionManager: {fileID: 1207905002}
 --- !u!114 &1207905001
@@ -3552,14 +3552,14 @@ RectTransform:
   m_GameObject: {fileID: 1407166571}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.7494501, y: 1.6586841, z: 2.7080557}
+  m_LocalScale: {x: 0.83117396, y: 1.1257223, z: 1.8379139}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 268160761}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -15, y: 679}
+  m_AnchoredPosition: {x: -175, y: 398}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1407166573

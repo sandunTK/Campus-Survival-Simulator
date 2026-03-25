@@ -7,7 +7,7 @@ using System;
 public class GeminiManager : MonoBehaviour
 {
     [Header("API Configuration")]
-    [SerializeField] private string apiKey = "AIzaSyBk0eJuypzU80IAbLQWzF59ve1ZaHZoZzA"; 
+    [SerializeField] private string apiKey = "AIzaSyD8eleW-RzuktUHRBHmHPcodTICctqFlwE"; 
     
     // ✅ CHANGED: 1.5-flash is retired. Using 2.5-flash for 2026 stability.
     [SerializeField] private string modelName = "gemini-2.5-flash"; 
